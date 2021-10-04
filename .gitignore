@@ -1,0 +1,7 @@
+bug_log/
+geckodriver.*
+last_trace_exception.txt
+pipe.obj
+pipe_finish.obj
+screenshots/
+bili/

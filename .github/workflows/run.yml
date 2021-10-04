@@ -1,0 +1,89 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Bilibili-Task
+
+on: [push, pull_request]
+
+jobs:
+#  custom:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - run: echo hello world
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # firefox: [ '75.0']
+        # firefox: [ '75.0', 'latest-beta', 'latest-devedition', 'latest-esr', 'latest' ]
+        firefox: ['latest' ]
+    name: Firefox ${{ matrix.firefox }} sample
+    steps:
+      - name: Setup firefox
+        uses: browser-actions/setup-firefox@latest
+        with:
+          firefox-version: ${{ matrix.firefox }}
+      - run: firefox --version
+      
+      - uses: actions/checkout@v2
+
+      - run: pwd
+            
+
+      - uses: browser-actions/setup-geckodriver@latest
+        with:
+          geckodriver-version: 0.24.0
+          version: 0.24.0
+      - run: geckodriver --version
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+      # https://stackoverflow.com/questions/59954185/github-action-split-long-command-into-multiple-lines
+      
+      - run: |
+          sudo apt update
+          sudo apt upgrade
+      
+      # - run: |
+      #     sudo echo "deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse">>/etc/apt/sources.list
+      #     sudo echo "deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse">>/etc/apt/sources.list
+      
+      - run: sudo apt-get install ubuntu-restricted-extras
+
+      - run: | 
+          pip install selenium
+          pip install baidu-aip
+          pip install requests
+          pip install tendo
+          pip install webdavclient3
+      
+      - run: python 0_bilibili_playcount_up.py
+
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: data_pack
+          path: ./
+
+#    - run: flutter config --enable-web
+    # - run: pwd
+      # - run: wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+      # - run: tar -xvf geckodriver-v0.24.0-linux64.tar.gz
+    # - run: ls
+    # - name: Setup firefox
+    #     with:
+    #       firefox-version: ${{ matrix.firefox }}
+    # - run: firefox --version
