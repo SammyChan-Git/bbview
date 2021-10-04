@@ -55,7 +55,7 @@ if __name__ == '__main__':
     import ml
     import time
     start=time.time()
-    videos=['https://bilibili.com/video/BV1SK411F73F','https://bilibili.com/video/BV1SK411F73F']
+    videos=['https://www.bilibili.tv/en/video/2000405963','https://www.bilibili.tv/en/video/2001879048']
     counter=0
     failure=defaultdict(lambda:None)
     while counter<2:
